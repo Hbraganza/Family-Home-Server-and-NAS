@@ -64,9 +64,9 @@ Important safety notes:
 - DO NOT share your private key (`<mykey>`), it is called a private key for a reason!! Keep it secret and backed up securely. 
 - If you must transfer your private key between machines, do it offline using trusted external storage.
 
-Note: For explanations and more info as to why this is important security procedures, look into the diffie-hellman key exchange.
+Note: For explanations and more info as to why this is an important security procedure, look into the diffie-hellman key exchange.
 
-To view your public key so you can copy/paste it from:
+To view your public key so you can copy/paste it from there are two methods:
 
 - Opening the file with notepad/text editor and copy and paste all of it (recommended as easiest).
 - Or use powershell:
@@ -79,9 +79,9 @@ Get-Content "path\to\public\key\<mykey>.pub"
 
 ### 4) Provide your public key to the remote device
 
-You need to place the contents of `<mykey>.pub` into the remote user’s `~/.ssh/authorized_keys` file. For the all Raspberry pi's on the system this was done using option C which is the easiest.
+You need to place the contents of `<mykey>.pub` into the remote user’s `~/.ssh/authorized_keys` file. For the all Raspberry pi's on the system this was done using Option C.
 
-Option A — copy/paste on the remote device (Linux/macOS/Raspberry Pi):
+#### Option A — copy/paste on the remote device (Linux/macOS/Raspberry Pi):
 
 ```bash
 mkdir -p ~/.ssh
@@ -90,7 +90,7 @@ echo "<paste the single-line contents of <mykey>.pub here>" >> ~/.ssh/authorized
 chmod 600 ~/.ssh/authorized_keys
 ```
 
-Option B — transfer the public key using scp from Windows:
+#### Option B — transfer the public key using scp from Windows:
 
 ```powershell
 # Replace <user> and <device> with your remote username and IP/hostname
@@ -107,20 +107,20 @@ rm /tmp/<mykey>.pub
 chmod 600 ~/.ssh/authorized_keys
 ```
 
-Option C - Raspberry Pi Imager
-#### Step 1)
+#### Option C - Raspberry Pi Imager
+##### Step 1)
 
 Open Raspberry Pi Imager
 
-#### Step 2)
+##### Step 2)
 
 Press Ctrl+Shift+x then go to `Services` and tick `Enable SSH` then `Allow public-key authentication only`
 
-#### Step 3)
+##### Step 3)
 
 Paste the single-line contents of `<mykey>.pub` into the text box. if no text box exist press `ADD SSH KEY` one should appear
 
-#### Step 4)
+##### Step 4)
 
 Setup your Raspberry Pi and flash the desired OS to the drive/SD card
 
@@ -142,7 +142,7 @@ To connect to different devices that have the same public key just change the `<
 
 ---
 
-### 7) Troubleshooting
+### 6) Troubleshooting
 
 - Permission denied (publickey): Ensure your public key is in `~/.ssh/authorized_keys` on the remote and file permissions are strict (`~/.ssh` 700, `authorized_keys` 600).
 - Server doesn’t support Ed25519: Generate an RSA 4096 key instead (see step 2).
@@ -155,7 +155,7 @@ ssh -v <user>@<device_IP_or_hostname.local> -i "path\to\the\private\key"
 
 ---
 
-### 8) Security reminders
+### 7) Security reminders
 
 - Never share your private key.
 - Use a passphrase to protect your key in case it’s stolen.
