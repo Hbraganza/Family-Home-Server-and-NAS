@@ -1,5 +1,5 @@
 # Family-Home-Server-and-NAS
-This is the setup process and any scripts used to set up our family's Home Server. It has a shared file storage area and private sections for file storage. The equipment used to set this up is:
+This is the setup process and any scripts used to set up our family's Home Server. It has a shared file storage area and private sections for file storage. It is also to act as a guide for anyone wanting to set up their own server/NAS but finds the current options lacking, bloated or don't store files how you want them The equipment used to set this up is:
 
 ## Equipment List
 - Raspberry Pi 5 (8GB) - Acting as the Home server and NAS (plans to host touchscreen with dashboard and photo display)
