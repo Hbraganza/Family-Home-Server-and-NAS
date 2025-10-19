@@ -18,9 +18,9 @@ This is the setup process and any scripts used to set up our family's Home Serve
 
 ## To Do List
 
-- [ ] Setup File system and automated backup system on Pi 5 and Pi 2 for NAS
+- [ ] Setup file system and automated backup system on Pi 5 and Pi 2 for NAS
 	- [x] Setup Pi 5 with NAS visability on Linux and Windows using Samba
-	- [x] Setup Private User Sections and Shared Photo Section with Admin access to all files
+	- [x] Setup private user sections and shared photo section with admin access to all files
 	- [ ] Setup Pi 2 to perform smooth easy recovery
 	- [ ] Automate weekly backup with Wake-up Over LAN on Pi 2
 	- [ ] Setup HDD health monitor with 3 months history saved on the Pi 2 and Pi 5
@@ -33,9 +33,9 @@ This is the setup process and any scripts used to set up our family's Home Serve
 	- [ ] Test email alert and HDD health monitoring
 	- [ ] Test file access
 
-- [ ] Build Inclosures and Tidy cables
+- [ ] Build inclosures and tidy cables
 	- [ ] Build Pi 2 inclosure
-	- [ ] Build Router Cable management system
+	- [ ] Build router cable management system
 	- [ ] Build Pi 5 inclosure with photo frame
 
 - [ ] Setup file and photo additional file access methods and syncing
