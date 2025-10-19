@@ -100,10 +100,10 @@ Adjust `/dev/sda` if your device letter differs. Confirm the new partition appea
 
 ### 6) Format the partition (NTFS)
 
-Create an NTFS filesystem on the new partition. The tool is `mkntfs` (no dot):
+Create an NTFS filesystem on the new partition. The tool is `mkfs.ntfs`:
 
 ```bash
-sudo mkntfs -f /dev/sda1
+sudo mkfs.ntfs -f /dev/sda1
 ```
 
 Tip: You can add a label, e.g. `-L NAS4TB`.
