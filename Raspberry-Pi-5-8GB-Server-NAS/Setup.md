@@ -1,12 +1,12 @@
 ## Raspberry Pi 5 (8GB) — 4TB NAS Setup
 
-This guide walks through setting up a Raspberry Pi 5 (8GB) as a home NAS using a 4TB HDD and Samba. It assumes Windows for flashing and SSH from your PC.
+This guide walks through setting up a Raspberry Pi 5 (8GB) as a home NAS using a 4TB HDD and Samba. It assumes Windows for flashing and SSH from your PC. When completed this will contain the setup method for the automated backup using rsync and the touch screen for dashboard and photo display system.
 
 - OS: Raspberry Pi OS (64-bit)
 - Boot media: 32GB microSD
 - Storage: 4TB NAS HDD via powered USB-to-SATA adapter
 
-Before you start, set up SSH keys on Windows. See: SSH With Public Key on Windows (OpenSSH) — open in a new tab.
+Before you start, set up SSH keys on Windows. See: [SSH With Public Key on Windows (OpenSSH)](https://github.com/Hbraganza/Family-Home-Server-and-NAS/blob/The-backup-script/SSH-With-Public-Key-Setup/Setup.md).
 
 ---
 
@@ -20,7 +20,7 @@ Before you start, set up SSH keys on Windows. See: SSH With Public Key on Window
 
 ---
 
-## Steps
+## Steps For The NAS Setup
 
 ### 1) Flash Raspberry Pi OS and preload your SSH public key
 
@@ -52,18 +52,25 @@ Update base packages:
 sudo apt update && sudo apt -y full-upgrade
 ```
 
+Note the root user is used alot for this setup. Therefore you may find it easier to run the command:
+
+```
+sudo su
+```
+
+This command will put you as the root user thys making all commands run as root user without sudo. This is only recommended if you know what you are doing otherwise you can cause serious issues such as untrusted programs running in root privialge or making directories with the wrong permissions.
+
 ---
 
 ### 3) Install required packages
 
 ```bash
-sudo apt install -y samba samba-common-bin vim wakeonlan smartmontools rsync ntfs-3g fuse parted
+sudo apt install -y samba samba-common-bin vim wakeonlan smartmontools rsync parted
 ```
 
 Notes:
 - `wakeonlan` is for sending WoL packets to other devices from the Pi.
 - `smartmontools` helps check HDD health.
-- `ntfs-3g` enables read/write NTFS support.
 - `parted` handles >2TB partitioning (GPT).
 
 ---
@@ -84,7 +91,7 @@ Find your drive path, e.g., `/dev/sda` (device) and later `/dev/sda1` (partition
 
 ### 5) Partition the disk (GPT for >2TB)
 
-For disks larger than 2TB use GPT and create one NTFS partition:
+For disks larger than 2TB use GPT label and create one NTFS partition:
 
 ```bash
 sudo parted /dev/sda
@@ -124,14 +131,14 @@ You should see `/dev/sda1` mounted at `/mnt/nasdata` and filesystem type `ntfs`.
 
 ### 8) Create a group and users
 
-Create a group to manage access (example: `nasusers`). Add your admin user and any other users.
+Create a group to manage access (example: `nasusers`). Add your admin (not root) user and any other users.
 
 ```bash
 sudo groupadd nasusers
 sudo usermod -aG nasusers <admin>
 id <admin>
 ```
-
+Where `<admin>` is the name of your admin user
 Create additional users as needed and add them to the group:
 
 ```bash
@@ -141,19 +148,13 @@ sudo adduser <user2>
 sudo usermod -aG nasusers <user2>
 ```
 
-Note the UID/GID values from `id <user>` for fstab.
+Note the UID values from `id <admin>` and in the command also the GID for the `nasusers` group to configure fstab.
 
 ---
 
 ### 9) Configure auto-mount with fstab (NTFS)
 
-Get the partition UUID:
-
-```bash
-sudo blkid /dev/sda1
-```
-
-Edit fstab:
+Using the partition details edit fstab:
 
 ```bash
 sudo vim /etc/fstab
@@ -162,7 +163,7 @@ sudo vim /etc/fstab
 Add a line similar to this (replace UUID, uid/gid to match your admin user):
 
 ```
-UUID=<uuid-from-blkid>  /mnt/nasdata  ntfs  defaults,uid=<uid>,gid=<gid>,umask=0007  0  0
+\dev\sda1  /mnt/nasdata  ntfs  defaults,uid=<uid>,gid=<gid>,umask=0007  0  0
 ```
 
 Notes:
@@ -177,9 +178,9 @@ sudo mount -a
 lsblk -f
 ```
 
-If `mount -a` returns an error, fix `/etc/fstab` immediately. Do not reboot until it mounts cleanly (a bad fstab can prevent boot).
+If `mount -a` returns an error, fix `/etc/fstab` immediately. Do not reboot until it mounts cleanly (a bad fstab can prevent boot and will require reflashing the SD card with a new OS).
 
-Ext4 note: If you format the disk as ext4 instead of NTFS, omit uid/gid/umask in fstab and manage permissions with `chown/chmod` on the mounted directory. You can also run a small boot-time script if needed.
+Ext4 note: If you format the disk as ext4 instead of NTFS, omit uid/gid/umask in fstab and manage permissions with `chown/chmod` on the mounted directory. You will need to create a script that runs on boot to change the ownership, group and permission if you want this automated.
 
 ---
 
@@ -188,21 +189,20 @@ Ext4 note: If you format the disk as ext4 instead of NTFS, omit uid/gid/umask in
 Create private directories per user and a common share, then set ownership to the admin user and group so group members can access:
 
 ```bash
-sudo mkdir -p /mnt/nasdata/users/user1 /mnt/nasdata/users/user2 /mnt/nasdata/common
+sudo mkdir -p /mnt/nasdata/user1 /mnt/nasdata/user2 /mnt/nasdata/common
 sudo chown -R <admin>:nasusers /mnt/nasdata
 sudo chmod -R 770 /mnt/nasdata
 ```
 
-`chmod 770` aligns with `umask=0007` in fstab (owner+group full, others none).
+`chmod 770` aligns with `umask=0007` in fstab (owner+group full permissions, others none).
 
 ---
 
 ### 11) Configure Samba
 
-Backup and edit Samba config:
+Edit Samba config:
 
 ```bash
-sudo cp /etc/samba/smb.conf /etc/samba/smb.conf.bak
 sudo vim /etc/samba/smb.conf
 ```
 
@@ -212,35 +212,34 @@ Under `[global]`, ensure at minimum:
 [global]
 	workgroup = WORKGROUP
 	security = user
-	map to guest = never
-	server role = standalone server
 ```
 
-Add private user shares and a common group share. Example:
+At the bottom add private user shares and a common group share. Example:
 
 ```
 [user1_share]
-	path = /mnt/nasdata/users/user1
-	valid users = user1
+	path = /mnt/nasdata/user1
+	valid users = user1, <admin>
 	read only = no
 	browsable = yes
 
 [user2_share]
-	path = /mnt/nasdata/users/user2
-	valid users = user2
+	path = /mnt/nasdata/user2
+	valid users = user2, <admin>
 	read only = no
 	browsable = yes
 
 [common]
 	path = /mnt/nasdata/common
-	valid users = @nasusers
+	valid users = @nasusers 
 	read only = no
 	browsable = yes
 ```
 
-Add Samba passwords for users (separate from Linux account passwords):
+Add Samba passwords for users (separate from Linux account passwords) which will be used to connect to the device:
 
 ```bash
+sudo smbpasswd -a <admin>
 sudo smbpasswd -a user1
 sudo smbpasswd -a user2
 ```
@@ -265,38 +264,10 @@ From Windows, map a network drive or connect via Explorer:
 \\nas-pi.local\common
 ```
 
-Log in with the Samba username and Samba password you set with `smbpasswd`.
+From android, use a filemanger that supports smb protocol. Then select the `network drive` and follow the instructions. 
+
+Be sure to log in with the user's username (set with `adduser`) and Samba password you set with `smbpasswd`.
 
 ---
 
-## Maintenance and useful commands
-
-- Verify mounts and filesystems:
-
-```bash
-lsblk -f
-df -h
-sudo blkid
-```
-
-- Check disk health (SMART):
-
-```bash
-sudo smartctl -a /dev/sda
-```
-
-- Rsync example (backup common share to USB drive at `/media/usb`):
-
-```bash
-sudo rsync -avh --delete /mnt/nasdata/common/ /media/usb/common-backup/
-```
-
----
-
-## Notes and safety
-
-- Always test `/etc/fstab` with `sudo mount -a` before rebooting. A broken fstab can prevent boot.
-- For NTFS, `uid/gid/umask` are mount-time options; file-level Linux permissions are emulated. For native Linux permissions and best performance, consider formatting the data drive as ext4 if you don’t need Windows write access directly to the disk.
-- Keep your SSH private key secure and use a passphrase. Refer to the SSH guide for details.
-
-
+## Steps For The Backup Setup
