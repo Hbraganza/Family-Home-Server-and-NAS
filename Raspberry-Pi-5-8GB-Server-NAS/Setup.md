@@ -1,6 +1,6 @@
 ## Raspberry Pi 5 (8GB) — 4TB NAS Setup
 
-This guide walks through setting up a Raspberry Pi 5 (8GB) as a home NAS using a 4TB HDD and Samba. It assumes Windows for flashing and SSH from your PC. When completed this will contain the setup method for the automated backup using rsync and the touch screen for dashboard and photo display system.
+This guide walks through setting up a Raspberry Pi 5 (8GB) as a home NAS using a 4TB HDD and Samba. It assumes Windows for flashing and SSH from your PC. When completed, this will contain the setup method for the automated backup using rsync and the touch screen for the dashboard and photo display system.
 
 - OS: Raspberry Pi OS (64-bit)
 - Boot media: 32GB microSD
@@ -52,13 +52,13 @@ Update base packages:
 sudo apt update && sudo apt -y full-upgrade
 ```
 
-Note the root user is used alot for this setup. Therefore you may find it easier to run the command:
+Note: The root user is used a lot for this setup. Therefore, you may find it easier to run the command:
 
 ```
 sudo su
 ```
 
-This command will put you as the root user thys making all commands run as root user without sudo. This is only recommended if you know what you are doing otherwise you can cause serious issues such as untrusted programs running in root privialge or making directories with the wrong permissions.
+This command will put you as the root user, thus making all commands run as the root user without sudo. This is only recommended if you know what you are doing; otherwise, you can cause serious issues, such as untrusted programs running in root privilege or making directories with the wrong permissions.
 
 ---
 
@@ -154,7 +154,7 @@ Note the UID values from `id <admin>` and in the command also the GID for the `n
 
 ### 9) Configure auto-mount with fstab (NTFS)
 
-Using the partition details edit fstab:
+Using the partition details, edit fstab:
 
 ```bash
 sudo vim /etc/fstab
@@ -214,7 +214,7 @@ Under `[global]`, ensure at minimum:
 	security = user
 ```
 
-At the bottom add private user shares and a common group share. Example:
+At the bottom, add private user shares and a common group share. Example:
 
 ```
 [user1_share]
@@ -236,7 +236,7 @@ At the bottom add private user shares and a common group share. Example:
 	browsable = yes
 ```
 
-Add Samba passwords for users (separate from Linux account passwords) which will be used to connect to the device:
+Add Samba passwords for users (separate from Linux account passwords), which will be used to connect to the device:
 
 ```bash
 sudo smbpasswd -a <admin>
@@ -251,7 +251,7 @@ sudo systemctl restart smbd nmbd
 sudo systemctl status smbd --no-pager
 ```
 
-On newer systems `nmbd` may not be present; `smbd` is sufficient.
+On newer systems, `nmbd` may not be present; `smbd` is sufficient.
 
 ---
 
@@ -264,9 +264,9 @@ From Windows, map a network drive or connect via Explorer:
 \\nas-pi.local\common
 ```
 
-From android, use a filemanger that supports smb protocol. Then select the `network drive` and follow the instructions. 
+From Android, use a file manager that supports smb protocol. Then select the `network drive` and follow the instructions. 
 
-Be sure to log in with the user's username (set with `adduser`) and Samba password you set with `smbpasswd`.
+Be sure to log in with the user's username (set with `adduser`) and the Samba password you set with `smbpasswd`.
 
 ---
 
