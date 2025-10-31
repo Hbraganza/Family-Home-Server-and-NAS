@@ -61,11 +61,11 @@ log() {
     local level="$1"; shift
     local msg="$*"
     local line
-    line=$(printf "%s [%s] %s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$level" "$msg")
+    line="$(date '+%Y-%m-%d %H:%M:%S') [$level] $msg"
     if [ -t 1 ]; then
-        printf "%s" "$line" | tee -a "$LOG_FILE"
+        printf "%s\n" "$line" | tee -a "$LOG_FILE"
     else
-        printf "%s" "$line" >> "$LOG_FILE"
+        printf "%s\n" "$line" >> "$LOG_FILE"
     fi
 }
 
@@ -159,19 +159,37 @@ main() {
     fi
 
     log INFO "Starting rsync to ${REMOTE_SNAPSHOT_PARTIAL}"
-    rsync \
-        -aHAX \
-        --numeric-ids \
-        --delete \
-        --delete-excluded \
-        --human-readable \
-        --info=stats2,progress2 \
-        --partial \
-        --out-format='FILE:%n' \
-        -e "$RSYNC_SSH" \
-        "${link_opts[@]}" \
-        "${exclude_opts[@]}" \
-        -- "${LOCAL_DIR%/}/" "${REMOTE_SSH_TARGET}:${REMOTE_SNAPSHOT_PARTIAL}/" >"$RSYNC_RAW" 2>&1
+    if [ -t 1 ]; then
+        # Interactive run: show live rsync progress on console and also capture to RSYNC_RAW
+        rsync \
+            -aHAX \
+            --numeric-ids \
+            --delete \
+            --delete-excluded \
+            --human-readable \
+            --info=stats2,progress2 \
+            --partial \
+            --out-format='FILE:%n' \
+            -e "$RSYNC_SSH" \
+            "${link_opts[@]}" \
+            "${exclude_opts[@]}" \
+            -- "${LOCAL_DIR%/}/" "${REMOTE_SSH_TARGET}:${REMOTE_SNAPSHOT_PARTIAL}/" 2>&1 | tee "$RSYNC_RAW"
+    else
+        # Non-interactive (cron): capture to RSYNC_RAW only
+        rsync \
+            -aHAX \
+            --numeric-ids \
+            --delete \
+            --delete-excluded \
+            --human-readable \
+            --info=stats2,progress2 \
+            --partial \
+            --out-format='FILE:%n' \
+            -e "$RSYNC_SSH" \
+            "${link_opts[@]}" \
+            "${exclude_opts[@]}" \
+            -- "${LOCAL_DIR%/}/" "${REMOTE_SSH_TARGET}:${REMOTE_SNAPSHOT_PARTIAL}/" >"$RSYNC_RAW" 2>&1
+    fi
 
     # Write concise progress snapshot to log and status file, then remove raw capture
     parse_and_write_progress "$RSYNC_RAW" "SUCCESS"
