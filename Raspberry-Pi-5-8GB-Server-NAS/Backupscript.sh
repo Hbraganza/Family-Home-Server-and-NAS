@@ -60,7 +60,13 @@ RSYNC_RAW="${LOG_DIR}/rsync_${TIMESTAMP}.raw"
 log() {
     local level="$1"; shift
     local msg="$*"
-    printf "%s [%s] %s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$level" "$msg" | tee -a "$LOG_FILE"
+    local line
+    line=$(printf "%s [%s] %s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$level" "$msg")
+    if [ -t 1 ]; then
+        printf "%s" "$line" | tee -a "$LOG_FILE"
+    else
+        printf "%s" "$line" >> "$LOG_FILE"
+    fi
 }
 
 require_cmd() {
@@ -79,6 +85,7 @@ cleanup_on_error() {
     # If rsync produced progress output, capture a final snapshot into the log and status file
     if [[ -f "$RSYNC_RAW" ]]; then
         parse_and_write_progress "$RSYNC_RAW" "FAILURE"
+        rm -f "$RSYNC_RAW" || true
     fi
     # Leave remote partial in place for inspection; remove on next successful run if desired
     exit "$exit_code"
@@ -166,8 +173,9 @@ main() {
         "${exclude_opts[@]}" \
         -- "${LOCAL_DIR%/}/" "${REMOTE_SSH_TARGET}:${REMOTE_SNAPSHOT_PARTIAL}/" >"$RSYNC_RAW" 2>&1
 
-    # Write concise progress snapshot to log and status file
+    # Write concise progress snapshot to log and status file, then remove raw capture
     parse_and_write_progress "$RSYNC_RAW" "SUCCESS"
+    rm -f "$RSYNC_RAW" || true
 
     log INFO "Rsync completed successfully"
 
@@ -183,6 +191,10 @@ main() {
 
     # 5) Remove any leftover .partial dirs after retention
     remove_all_partials
+
+    # 6) Prune local logs older than retention
+    log INFO "Pruning local logs older than ${RETENTION_DAYS} days"
+    find "$LOG_DIR" -type f -name 'backup_*.log' -mtime +"$RETENTION_DAYS" -print -delete >> "$LOG_FILE" 2>&1 || true
 
     log INFO "==== Backup run completed successfully ===="
 }
