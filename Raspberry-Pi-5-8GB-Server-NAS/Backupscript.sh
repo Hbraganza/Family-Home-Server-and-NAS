@@ -162,6 +162,7 @@ main() {
     if [ -t 1 ]; then
         # Interactive run: show live rsync progress on console and also capture to RSYNC_RAW
         rsync \
+            -v \
             -aHAX \
             --numeric-ids \
             --delete \
@@ -177,6 +178,7 @@ main() {
     else
         # Non-interactive (cron): capture to RSYNC_RAW only
         rsync \
+            -v \
             -aHAX \
             --numeric-ids \
             --delete \
