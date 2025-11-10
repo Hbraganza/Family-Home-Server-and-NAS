@@ -21,17 +21,17 @@ This is the setup process and any scripts used to set up our family's Home Serve
 - [ ] Setup file system and automated backup system on Pi 5 and Pi 2 for NAS
 	- [x] Setup Pi 5 with NAS visability on Linux and Windows using Samba
 	- [x] Setup private user sections and shared photo section with admin access to all files
-	- [ ] Setup Pi 2 to perform smooth easy recovery
+	- [x] Setup Pi 2 to perform smooth easy recovery
 	- [ ] Automate weekly backup with Wake-up Over LAN on Pi 2
 	- [ ] Setup HDD health monitor with 3 months history saved on the Pi 2 and Pi 5
 	- [ ] Setup automated health alert by email
 
 - [ ] Test recovery system and iteration system
-	- [ ] Revert one file
-	- [ ] Revert full disk
+	- [x] Revert one file
+	- [x] Revert full disk
 	- [ ] Full recovery of old data on disk using backup
 	- [ ] Test email alert and HDD health monitoring
-	- [ ] Test file access
+	- [x] Test file access
 
 - [ ] Build inclosures and tidy cables
 	- [ ] Build Pi 2 inclosure
@@ -39,22 +39,25 @@ This is the setup process and any scripts used to set up our family's Home Serve
 	- [ ] Build Pi 5 inclosure with photo frame
 
 - [ ] Setup file and photo additional file access methods and syncing
-	- [ ] Setup phone access
-	- [ ] Setup phone photo syncing to users private space with ability to transfer to shared area using immich
+	- [x] Setup phone access
+	- [x] Setup phone photo syncing to users private space with ability to transfer to shared area
 	- [ ] Setup password manager
 	- [ ] Setup VPN
 
 - [ ] Test non-local network access
-	- [ ] Test it is secure and get checked with Dad
+	- [ ] Test it is secure and get checked
 	- [ ] Setup domain
 
 - [ ] Attach screen to Pi 5 and build photo frame
 	- [ ] Attach screen to Pi 5
 	- [ ] Setup 6 am to 10 pm photo viewer
 	- [ ] Setup dashboard
+    - [ ] Setup object detection of Humans and animals for photo selection using YOLO or similar
 
 - [ ] Powersaving setup
 	- [ ] Setup control of smart plugs for backup systems
 	- [ ] Setup idle system for NAS HDD
+
+- [ ] Setup a ransomware detection system
 
 - [ ] Test full system and ensure Pi 1 works when Pi 5 fails and visa versa also check send checks if each other are running
