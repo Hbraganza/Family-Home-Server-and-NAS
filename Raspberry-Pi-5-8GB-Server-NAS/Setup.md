@@ -129,7 +129,48 @@ You should see `/dev/sda1` mounted at `/mnt/nasdata` and filesystem type `ntfs`.
 
 ---
 
-### 8) Create a group and users
+### 8) Configure a static IP
+
+To do this find the IP and the DNS IP which was done when the [pi-hole](https://github.com/Hbraganza/Raspberry-PI-Server-and-NAS/blob/main/Raspberry-Pi-Gen-1-Pi-Hole/Setup.md) was setup in section 1. The DNS will be the pi-hole IP.
+
+Once you have a empty IP and gateway and DNS IP details. Set a static IP with `nmtui` (NetworkManager) or classic `dhcpcd` depending on your OS build.
+
+Option A — NetworkManager (nmtui) newer Raspberry Pi OS:
+
+```bash
+sudo apt install -y network-manager
+sudo nmtui
+```
+
+Use “Edit a connection” to set a manual IPv4 address, gateway, and DNS (temporarily use your router or a public DNS until Pi-hole is running). Restart networking after changes.
+
+Option B — dhcpcd.conf older Raspberry Pi OS:
+
+```bash
+sudo vim /etc/dhcpcd.conf
+```
+
+Add lines like the following (adapt to your interface and network):
+
+```
+interface eth0
+static ip_address=192.168.1.50/24
+static routers=192.168.1.1
+static domain_name_servers=1.1.1.1 8.8.8.8
+```
+note `eth0` is for ethernet connection wifi is `wlan0`
+Apply changes with:
+
+```bash
+reboot
+ip a
+```
+
+Note: Make sure the chosen IP is outside your router’s DHCP pool or reserved for the Pi.
+
+---
+
+### 9) Create a group and users
 
 Create a group to manage access (example: `nasusers`). Add your admin (not root) user and any other users.
 
@@ -152,7 +193,7 @@ Note the UID values from `id <admin>` and in the command also the GID for the `n
 
 ---
 
-### 9) Configure auto-mount with fstab (NTFS)
+### 10) Configure auto-mount with fstab (NTFS)
 
 Using the partition details, edit fstab:
 
@@ -184,7 +225,7 @@ Ext4 note: If you format the disk as ext4 instead of NTFS, omit uid/gid/umask in
 
 ---
 
-### 10) Prepare share directories and permissions
+### 11) Prepare share directories and permissions
 
 Create private directories per user and a common share, then set ownership to the admin user and group so group members can access:
 
@@ -198,7 +239,7 @@ sudo chmod -R 770 /mnt/nasdata
 
 ---
 
-### 11) Configure Samba
+### 12) Configure Samba
 
 Edit Samba config:
 
@@ -255,7 +296,7 @@ On newer systems, `nmbd` may not be present; `smbd` is sufficient.
 
 ---
 
-### 12) Test from another computer
+### 13) Test from another computer
 
 From Windows, map a network drive or connect via Explorer:
 
