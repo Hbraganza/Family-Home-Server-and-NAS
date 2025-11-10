@@ -1,4 +1,4 @@
-# Section 1) Raspberry Pi Gen 1 — Pi-hole Setup (4GB SD, Raspberry Pi OS Lite 32-bit)
+# Section 1) Raspberry Pi Gen 1 — Pi-hole Setup 4GB SD
 
 This guide sets up a Raspberry Pi Gen 1 as a Pi-hole DNS sinkhole. It assumes you’re using a Windows PC to prepare the SD card and to SSH into the Pi. This will later show the setup method for domainhosting, vpn and porting.
 
