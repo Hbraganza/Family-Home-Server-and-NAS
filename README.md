@@ -1,5 +1,5 @@
 # Family-Home-Server-and-NAS
-This is the setup process and any scripts used to set up our family's Home Server. It has a shared file storage area and private sections for file storage. It is also to act as a guide for anyone wanting to set up their own server/NAS but finds the current options lacking, bloated or don't store files how you want them The equipment used to set this up is:
+This is the repository showing the setup process and any scripts used to set up our family's Home Server which is made of Raspberry Pi's to replace dropbox. It has a shared file storage area and private sections for file storage. It is also to act as a guide for anyone wanting to set up their own server/NAS but finds the current options lacking, bloated or don't store files how you want them to. The equipment used to set this up is:
 
 ## Equipment List
 - Raspberry Pi 5 (8GB) - Acting as the Home server and NAS (plans to host touchscreen with dashboard and photo display)
@@ -14,7 +14,11 @@ This is the setup process and any scripts used to set up our family's Home Serve
 - Samba protocol (NAS)
 - SSH public key protocol
 - Pi-Hole Network wide Adblocker
+- rsync for backup over local network
 
+## Setup Process
+
+To follow/recreate the setup that is used the repository has been broken down so each directory represents what has been done to each device. In the folder is a setup.md file which explains the steps for setup of on that device. The setup.md files are broken down into sections each section is the setup of one thing for example set of the NAS or setup of the Backup. This README.MD will provide the overall setup order and links to each of the setup pages.
 
 ## To Do List
 
