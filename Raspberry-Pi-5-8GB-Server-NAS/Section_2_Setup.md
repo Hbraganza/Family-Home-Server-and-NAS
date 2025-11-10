@@ -1,4 +1,4 @@
-# SECTION 2) Rsync Incremental Backup Setup
+# Section 2) Rsync Incremental Backup Setup
 
 This section is to setup up an automated incremental backup on a different device using rsync on your local network i.e. LAN. It is not currently setup for backup over the internet.
 
