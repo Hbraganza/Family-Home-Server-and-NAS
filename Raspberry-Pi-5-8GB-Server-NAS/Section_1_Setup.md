@@ -1,4 +1,4 @@
-# Raspberry Pi 5 (8GB) — 4TB NAS Setup & Section 1) Steps For The NAS Setup
+# Section 1) Raspberry Pi 5 (8GB) — 4TB NAS Setup & Steps For The NAS Setup
 
 This guide walks through setting up a Raspberry Pi 5 (8GB) as a home NAS using a 4TB HDD and Samba. It assumes Windows for flashing and SSH from your PC. When completed, this will contain the setup method for the automated backup using rsync and the touch screen for the dashboard and photo display system.
 
