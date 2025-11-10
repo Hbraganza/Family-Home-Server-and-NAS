@@ -18,7 +18,7 @@ This is the repository showing the setup process and any scripts used to set up 
 
 ## Setup Process
 
-To follow/recreate the setup that is used the repository has been broken down so each directory represents what has been done to each device. In the folder is a setup.md file which explains the steps for setup of on that device. The setup.md files are broken down into sections each section is the setup of one thing for example set of the NAS or setup of the Backup. This README.MD will provide the overall setup order and links to each of the setup pages.
+To follow/recreate the setup that is used, this repository has been broken down so each directory represents what has been done on each device. In the folder is a setup.md file which explains the steps for setup of on that device. The setup.md files are broken down into sections each section is the setup of one thing for example set of the NAS or setup of the Backup. This README.MD will provide the overall setup order and links to each of the setup pages.
 
 ## To Do List
 
