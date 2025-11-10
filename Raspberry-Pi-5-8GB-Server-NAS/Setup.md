@@ -272,7 +272,11 @@ Be sure to log in with the user's username (set with `adduser`) and the Samba pa
 
 ## SECTION 2) Rsync Incremental Backup Setup
 
+This section is to setup up an automated incremental backup on a different device using rsync on your local network i.e. LAN. It is not currently setup for backup over the internet.
+
 For this backup setup to work it assumes that the Raspberry Pi Gen 2 has been setup properly if not please refer to section 1 of [Backup Device Setup](https://github.com/Hbraganza/Raspberry-PI-Server-and-NAS/blob/main/Raspberry-Pi-Gen-2-Backup/Setup.md)
+
+---
 
 ### 1) Create SSH public Key with Backup Device
 
@@ -290,6 +294,8 @@ ssh-copy-id username@device_IP_or_hostname.local
 ```
 NOTE: doing it over intranet or internet is not as secure as by usb transfer which I recommend however, public keys are public for a reason so will not compromise security
 
+---
+
 ### 2) Download/Create the Backup Bash Script
 
 Create your own incremental backup script using rsync or you can download and edit the Github one with:
@@ -304,6 +310,8 @@ Now change the ownership to the user and give the file executable permissions wi
 sudo chown user:user Backupscript.sh
 sudo mod 770 Backupscript.sh
 ```
+
+---
 
 ### 2.1) Edit the Backup Bash Script
 
@@ -325,6 +333,8 @@ NOTE: for the DIRECTORIES variable it is recommended that they match the sambash
 
 NOTE 2: Instructions from here assume that the script was downloaded if you created your own script then it is still possible to follow along but there maybe slight differences
 
+---
+
 ### 3) Test the Backup Script
 
 Test the backup script by executing it:
@@ -335,6 +345,8 @@ Backupscript.sh
 NOTE: To properly test it is reccomended that you keep a few files outside of the first test to test the incremental backup and DO NOT TEST WITH YOUR MAIN SERVER FILES AT FIRST as there is a risk of deletion, corruption or more create a copy or some test files and try with them first.
 
 The first run will do a full backup and should see a `latest` and `snapshots` directory on the backup device. If you run `ls -l` in that directory the `latest` will show it pointing to another directory. then add some additional files to the source and run it again. This will run faster and should only download the additional files. Once done change directory to the old backup and run `ls -l` in the old backup directory there files will list the number 2 indicating it has 2 hard links.
+
+---
 
 ### 4) setup a Cron Job
 
