@@ -20,7 +20,7 @@ Before you start, set up SSH keys on Windows. See: [SSH With Public Key on Windo
 
 ---
 
-## SECTION 1) Steps For The NAS Setup
+## Steps For The NAS Setup
 
 ### 1) Flash Raspberry Pi OS and preload your SSH public key
 
