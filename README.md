@@ -1,4 +1,4 @@
-# Family-Home-Server-and-NAS
+# Raspberry Pi Server and NAS
 This is the repository showing the setup process and any scripts used to set up our family's Home Server which is made of Raspberry Pi's to replace dropbox. It has a shared file storage area and private sections for file storage. It is also to act as a guide for anyone wanting to set up their own server/NAS but finds the current options lacking, bloated or don't store files how you want them to. The equipment used to set this up is:
 
 ## Equipment List
