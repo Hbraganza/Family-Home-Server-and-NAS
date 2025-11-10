@@ -1,4 +1,4 @@
-## Raspberry Pi 2 — 6TB Backup Setup
+# Section 1) Raspberry Pi 2 — 6TB Backup Setup
 
 This guide walks through setting up a Raspberry Pi 2 as a backup system using a 6TB HDD with rsync. It assumes Windows for flashing and SSH from your PC. When completed, this will contain the setup method for the automated backup using rsync and the touch screen for the dashboard and photo display system.
 
@@ -21,7 +21,7 @@ Before you start, set up SSH keys on Windows. See: [SSH With Public Key on Windo
 
 ---
 
-## SECTION 1) Steps For The Backup Setup
+## Steps For The Backup Setup
 
 ### 1) Flash Raspberry Pi OS and preload your SSH public key
 
